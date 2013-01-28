@@ -105,6 +105,10 @@ def run(source, target, dev, conf = None):
                 inf = open(inpath, 'r')
                 data = inf.read()
                 inf.close()
+                # Check the file itself for a title override
+                if data.startswith('# TITLE: '):
+                    line = data.split('\n')[0]
+                    doctitle = line[9:]
                 data = md.convert(data)
                 soup = bs4.BeautifulSoup(data, "html5lib")
                 titletag = soup.new_tag('title')
