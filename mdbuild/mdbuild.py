@@ -54,8 +54,9 @@ def out(*args):
 
 def fpjoin(*args):
     args = list(args)
-    for k,arg in enumerate(args):
-        args[k] = arg.strip(os.path.sep)
+    args[0] = args[0].rstrip(os.path.sep)
+    for k,arg in enumerate(args[1:]):
+        args[k+1] = arg.strip(os.path.sep)
     return os.path.sep.join(args)
 
 
@@ -91,7 +92,7 @@ def run(source, target, dev, conf = None):
     ignore = config.get('ignore', [])
 
     for root, _, files in os.walk(source):
-        path = fpjoin(target, root)
+        path = fpjoin(target, root.lstrip(source))
         if not os.path.exists(path):
             os.makedirs(path)
         for file in files:
@@ -108,7 +109,7 @@ def run(source, target, dev, conf = None):
                 inf.close()
                 # Check the file itself for a title override
                 if data.startswith('# TITLE: '):
-                    line = data.split('\n')[0]
+                    line, data = data.split('\n', 1)
                     doctitle = line[9:]
                 data = md.convert(data)
                 soup = bs4.BeautifulSoup(data, "html5lib")
@@ -124,11 +125,13 @@ def run(source, target, dev, conf = None):
                 output = soup.prettify(formatter = 'html')
                 # Fix link output (don't add extra spaces at the end of link
                 # tags - this messes up text layout)
-                try:
-                    output = re.sub(r'([a-zA-Z0-9])(\s+)\<\/a\>\s*(\.)?',
-                                    r'\1</a>\3', output)
-                except (sre_constants.error,):
-                    pass
+                def matcher(m):
+                    try:
+                        return ''.join([m.group(1),'</a>',m.group(3) or ' '])
+                    except (IndexError,):
+                        return m.group(1) + '</a> '
+                output = re.sub(r'([a-zA-Z0-9])(\s+)\<\/a\>\s*(\.)?',
+                                matcher, output)
                 otf = open(filepath, 'w')
                 otf.write('<!doctype html>\n')
                 otf.write(output)
@@ -150,8 +153,6 @@ if __name__ == "__main__":
     dev = True
     clean = False
 
-    cwd = os.getcwd()
-
     for arg in sys.argv[1:]:
         if arg.startswith('--'):
             if arg == '--dev':
@@ -164,9 +165,9 @@ if __name__ == "__main__":
                 conf_file = arg.split('=')[1]
         else:
             if not source_dir:
-                source_dir = fpjoin(cwd, arg)
+                source_dir = arg
             else:
-                target_dir = fpjoin(cwd, arg)
+                target_dir = arg
 
     if not (source_dir and target_dir):
         out(__doc__)
