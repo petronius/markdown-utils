@@ -39,6 +39,7 @@ import imp
 import bs4
 import shutil
 import markdown
+import sre_constants
 
 md = markdown.Markdown()
 
@@ -123,8 +124,11 @@ def run(source, target, dev, conf = None):
                 output = soup.prettify(formatter = 'html')
                 # Fix link output (don't add extra spaces at the end of link
                 # tags - this messes up text layout)
-                output = re.sub(r'([a-zA-Z0-9])(\s+)\<\/a\>\s*(\.)?',
-                                r'\1</a>\3', output)
+                try:
+                    output = re.sub(r'([a-zA-Z0-9])(\s+)\<\/a\>\s*(\.)?',
+                                    r'\1</a>\3', output)
+                except (sre_constants.error,):
+                    pass
                 otf = open(filepath, 'w')
                 otf.write('<!doctype html>\n')
                 otf.write(output)
@@ -146,6 +150,8 @@ if __name__ == "__main__":
     dev = True
     clean = False
 
+    cwd = os.getcwd()
+
     for arg in sys.argv[1:]:
         if arg.startswith('--'):
             if arg == '--dev':
@@ -158,9 +164,9 @@ if __name__ == "__main__":
                 conf_file = arg.split('=')[1]
         else:
             if not source_dir:
-                source_dir = arg
+                source_dir = fpjoin(cwd, arg)
             else:
-                target_dir = arg
+                target_dir = fpjoin(cwd, arg)
 
     if not (source_dir and target_dir):
         out(__doc__)
