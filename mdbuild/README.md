@@ -2,7 +2,9 @@
 
 This simple script will compile a directory tree of files into an identical tree, but with all markdown files converted to pretty-printed HTML. The configuration file allows you to specify additional style or script files to be added to the HTML header. All non-markdown files in the source tree are copied directly, allowing you to store CSS and Javascript with the markdown source.
 
-The title of each HTML document will always be the document's filename, converted from *snake_case* to *Title Case*.
+By default, the title of each HTML document will always be the document's filename, converted from *snake_case* to *Title Case*. To override this scheme, you can tag a file with a new document title using the following syntax on the first line of the file:
+  
+    # TITLE: <page title>
 
 ## Options and arguments
 
