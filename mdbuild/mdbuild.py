@@ -122,7 +122,7 @@ def run(source, target, dev, conf = None):
                 for url in scripts:
                     newtag = soup.new_tag('script', src = url, type='text/javascript')
                     soup.html.head.append(newtag)
-                output = soup.prettify(formatter = 'html')
+                output = soup.prettify(formatter = 'html').encode('utf8')
                 # Fix link output (don't add extra spaces at the end of link
                 # tags - this messes up text layout)
                 def matcher(m):

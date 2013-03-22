@@ -294,7 +294,7 @@ class MDHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
                     title_parts.append(title or self.default_title)
                 doc = HTMLDoc(' | '.join(title_parts))
                 f.seek(0)
-                html = md.convert(f.read())
+                html = md.convert(f.read().encode('utf8'))
                 doc.body_line(html)
                 f.close()
                 f = StringIO.StringIO()
