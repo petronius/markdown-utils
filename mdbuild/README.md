@@ -12,11 +12,11 @@ This script can be made executable, or invoked through python. Either way, the a
 
     $ python mdbuild.py <source dir> <target dir> [--config=file] [--dev|--live|--clean]
 
-If the `--config` option is not specified, it is assumed that there is a config.py file residing in the root of `&lt;source dir&gt;`.
+If the `--config` option is not specified, it is assumed that there is a config.py file residing in the root of `<source dir>`.
 
 The `--dev` flag is understood to be on by default, unless `--live` is present. The only difference is which script/style URLs are included (see 'Configuration', below).
 
-The `--clean` option will delete all files and directories in the `&lt;target dir&gt;` directory.
+The `--clean` option will delete all files and directories in the `<target dir>` directory.
 
 ## Configuration
 
