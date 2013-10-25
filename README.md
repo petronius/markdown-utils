@@ -4,6 +4,6 @@ This project contains tools for working with markdown files. Each tool has its o
 
 A simple Python 2.x server that automagically converts static markdown files to HTML when serving them. Useful for small, static sites (although it probably can't handle a wild amount of traffic).
 
-## [MDBuilda](https://github.com/petronius/markdown-utils/tree/master/mdbuild)
+## [MDBuild](https://github.com/petronius/markdown-utils/tree/master/mdbuild)
 
 A configurable tool for converting Markdown files into HTML, geared for generating static sites from a simple directory tree.
